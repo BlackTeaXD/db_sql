@@ -1,18 +1,18 @@
-WITH movie_genres AS (SELECT movie.id, movie.title, json_agg(genre.*) AS genre
+WITH movie_genres AS (SELECT movie.id, movie.title, JSON_AGG(genre.*) AS genre
                       FROM movie
                                JOIN movie_genre ON movie.id = movie_genre.movie_id
                                JOIN genre ON genre.id = movie_genre.genre_id
                       GROUP BY movie.id, movie.title),
      movie_director AS (SELECT movie.id,
-                               json_agg(json_build_object('id', person.id, 'first_name', person.first_name, 'last_name',
-                                                          person.last_name, 'photo', file.*))->0 AS director
+                               JSON_AGG(JSON_BUILD_OBJECT('id', person.id, 'first_name', person.first_name, 'last_name',
+                                                          person.last_name, 'photo', file.*)) -> 0 AS director
                         FROM movie
                                  JOIN person ON movie.director = person.id
                                  JOIN photos ON photos.person_id = person.id AND photos.primary = true
                                  JOIN file ON file.id = photos.photo_id
                         GROUP BY movie.id),
      movie_actors AS (SELECT movie.id,
-                             json_agg(json_build_object('id', person.id, 'first_name', person.first_name, 'last_name',
+                             JSON_AGG(JSON_BUILD_OBJECT('id', person.id, 'first_name', person.first_name, 'last_name',
                                                         person.last_name, 'photo', file.*)) AS actors
                       FROM movie
                                JOIN movie_actor ON movie.id = movie_actor.movie_id
@@ -21,7 +21,7 @@ WITH movie_genres AS (SELECT movie.id, movie.title, json_agg(genre.*) AS genre
                                LEFT JOIN file ON file.id = photos.photo_id
                       GROUP BY movie.id),
      movie_poster AS (SELECT movie.id,
-                             json_agg(file)->0 as poster
+                             JSON_AGG(file) -> 0 as poster
                       FROM movie
                                JOIN posters ON posters.poster_id = movie.id
                                JOIN file ON posters.poster_id = file.id

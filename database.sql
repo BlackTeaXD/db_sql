@@ -28,7 +28,7 @@ CREATE TABLE movie
     description  TEXT,
     budget       DECIMAL,
     release_date DATE,
-    duration     interval,
+    duration     INTERVAL,
     director     INT,
     country      INT,
     create_at    DATE DEFAULT now(),
@@ -65,6 +65,11 @@ CREATE TABLE person
     FOREIGN KEY (country) REFERENCES country (id)
 );
 
+CREATE TABLE country
+(
+    id   SERIAL PRIMARY KEY,
+    name VARCHAR(255)
+);
 CREATE TABLE favorite_movie
 (
     user_id  INT,
@@ -138,8 +143,11 @@ CREATE TABLE movie_actor
     FOREIGN KEY (person_id) REFERENCES person (id)
 );
 
-CREATE TABLE country
+CREATE TABLE character_actor
 (
-    id   SERIAL PRIMARY KEY,
-    name VARCHAR(255)
-);
+    character_id  INT,
+    person_id INT,
+    PRIMARY KEY (character_id, person_id),
+    FOREIGN KEY (character_id) REFERENCES character (id),
+    FOREIGN KEY (person_id) REFERENCES person (id)
+)

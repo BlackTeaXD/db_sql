@@ -3,8 +3,8 @@ SELECT m.id,
        m.release_date,
        m.duration,
        m.description,
-       ROW_TO_JSON(f.*) AS poster,
-       json_agg(json_build_object('id', p.id, 'first_name', p.first_name, 'last_name', p.last_name))->0 AS director
+       ROW_TO_JSON(f.*)                                                                                   AS poster,
+       JSON_AGG(JSON_BUILD_OBJECT('id', p.id, 'first_name', p.first_name, 'last_name', p.last_name)) -> 0 AS director
 FROM movie AS m
          JOIN movie_genre AS mg ON mg.movie_id = m.id
          JOIN genre AS g ON mg.genre_id = g.id
